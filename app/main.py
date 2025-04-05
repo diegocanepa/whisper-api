@@ -1,17 +1,31 @@
-from fastapi import FastAPI, UploadFile, File
+from flask import Flask, request, jsonify
 from app.transcriber import transcribe_audio
+import uuid
+import os
 
-app = FastAPI()
+app = Flask(__name__)
 
-@app.post("/transcribe")
-async def transcribe(file: UploadFile = File(...)):
-    audio_path = f"/tmp/{file.filename}"
-    with open(audio_path, "wb") as f:
-        f.write(await file.read())
-    
+@app.route("/status", methods=["GET"])
+def status():
+    return jsonify({"status": "ok"})
+
+@app.route("/transcribe", methods=["POST"])
+def transcribe():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "Empty filename"}), 400
+
+    audio_path = f"/tmp/{uuid.uuid4()}.wav"
+    file.save(audio_path)
+
     text = transcribe_audio(audio_path)
-    return {"text": text}
+    os.remove(audio_path)
+
+    return jsonify({"text": text})
+
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
