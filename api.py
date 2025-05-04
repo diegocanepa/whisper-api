@@ -33,7 +33,7 @@ def status():
     return {"status": "ok"}
 
 
-@app.post("/transcribe/")
+@app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file provided.")
