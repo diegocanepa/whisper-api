@@ -11,7 +11,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
 
-transcriber = WhisperTranscriber(model_size="base")
+transcriber = WhisperTranscriber(model_size="tiny")
 
 
 @app.route("/status", methods=["GET"])
