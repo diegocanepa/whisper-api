@@ -1,6 +1,6 @@
 import logging
 from flask import Flask, request, jsonify
-from transcriber import WhisperTranscriber
+from app.transcriber import WhisperTranscriber
 import tempfile
 import os
 
