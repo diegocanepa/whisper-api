@@ -20,7 +20,7 @@ def status():
     Health check endpoint.
     """
     logging.info("Status check requested.")
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok"}), 200
 
 
 @app.route("/transcribe", methods=["POST"])
