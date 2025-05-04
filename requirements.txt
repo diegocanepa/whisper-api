@@ -1,4 +1,5 @@
 Flask
 torch
 python-multipart
+gunicorn
 git+https://github.com/openai/whisper.git
