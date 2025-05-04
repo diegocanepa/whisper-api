@@ -24,7 +24,7 @@ client = OpenAI(api_key=api_key)
 # Create FastAPI app
 app = FastAPI()
 
-@app.route("/status", methods=["GET"])
+@app.get("/status")
 def status():
     """
     Health check endpoint.
