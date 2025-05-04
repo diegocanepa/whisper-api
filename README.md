@@ -1,91 +1,102 @@
-# Whisper API - FastAPI + OpenAI Whisper
+# 🗣️ FastAPI OpenAI Transcription Service
 
-A simple API for audio transcription using OpenAI's Whisper model.
+This is a lightweight FastAPI-based API service that uses [OpenAI's Speech-to-Text API](https://platform.openai.com/docs/guides/speech-to-text) (Whisper / GPT-4o Transcribe) to transcribe audio files to text.
 
-Deployed on Railway.
+## 🚀 Features
+
+- Transcribe `.mp3` audio using OpenAI Whisper or GPT-4o
+- Upload audio via HTTP POST
+- Returns clean, accurate transcription
+- Includes logging and error handling
+- Loads API key from `.env`
+- Docker-ready for easy deployment
+
 
 ---
 
-## Endpoints
+## 🛠️ Setup
 
-### POST `/transcribe`
+### 1. Clone the repo
 
-Transcribes an audio file.
+```bash
+git clone https://github.com/your-username/openai-transcription-api.git
+cd openai-transcription-api
+```
 
-#### Request
+### 2. Install dependencies
 
-- Content-Type: `multipart/form-data`
-- Parameters:
-  - `file`: Audio file (`wav`, `mp3`, `m4a`, `ogg`, etc.)
+```bash
+pip install -r requirements.txt
+```
 
-#### Response
+### 3. Add `.env` file
+
+Create a `.env` file in the root with:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+---
+
+## ▶️ Run Locally
+
+```bash
+uvicorn main:app --reload
+```
+
+Access interactive docs at:  
+http://localhost:8000/docs
+
+---
+
+## 🐳 Run with Docker
+
+### Build the image
+
+```bash
+docker build -t transcriber .
+```
+
+### Run the container
+
+```bash
+docker run -p 8000:8000 --env-file .env transcriber
+```
+
+---
+
+## 📤 API Usage
+
+### `POST /transcribe/`
+
+Uploads an audio file and returns transcription.
+
+#### Form Data:
+
+- `file`: audio file (.mp3 format recommended)
+
+#### Example (using `curl`):
+
+```bash
+curl -X POST http://localhost:8000/transcribe/ \
+  -F "file=@/path/to/audio.mp3"
+```
+
+#### Response:
 
 ```json
 {
-  "text": "Transcribed text"
+  "transcription": "Hello, this is a transcribed message."
 }
 ```
 
 ---
 
-## Running Locally
+## 🧱 Tech Stack
 
-Clone the repository:
-
-```bash
-git clone https://github.com/your-user/whisper-api.git
-cd whisper-api
-```
-
-Create a virtual environment and install dependencies:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-Start the server:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-The API will be available at:
-
-```
-http://localhost:8000
-```
-
----
-
-## Deployment on Railway
-
-1. Create a new project on [Railway](https://railway.app/)
-2. Connect this repository
-3. Railway will automatically detect the `Dockerfile`
-4. Deploy!
-
-Your API will be available at:
-
-```
-https://<your-app>.up.railway.app
-```
-
----
-
-## Notes
-
-- By default, the `base` Whisper model is used.
-- You can change the model in `app/transcriber.py` to `small`, `medium`, or `large` depending on your needs and resource limits.
-- If you are on the free Railway plan (512MB RAM), using larger models is not recommended.
-
----
-
-## Future Improvements (Optional)
-
-- [ ] Support multiple languages
-- [ ] Add proper logging
-- [ ] Improve error handling
-- [ ] Basic unit tests
-- [ ] Multi-stage Docker build optimization
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [OpenAI API](https://platform.openai.com/)
+- [Python 3.11](https://www.python.org/)
+- [Uvicorn](https://www.uvicorn.org/)
+- [Docker](https://www.docker.com/)
