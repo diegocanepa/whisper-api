@@ -35,7 +35,7 @@ def status():
     logging.info("Heath check requested.")
     return {"status": "ok"}
 
-@app.get("/status")
+@app.head("/status")
 def status():
     """
     Status endpoint.
