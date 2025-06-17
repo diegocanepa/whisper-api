@@ -19,15 +19,26 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     logger.error("OPENAI_API_KEY is missing. Please check your .env file.")
     raise RuntimeError("OPENAI_API_KEY not found")
+
+# Get model configuration
+model_name = os.getenv("OPENAI_TRANSCRIPTION_MODEL", "gpt-4o-transcribe")
 client = OpenAI(api_key=api_key)
 
 # Create FastAPI app
 app = FastAPI()
 
-@app.get("/status")
+@app.get("/health-check")
 def status():
     """
     Health check endpoint.
+    """
+    logging.info("Heath check requested.")
+    return {"status": "ok"}
+
+@app.get("/status")
+def status():
+    """
+    Status endpoint.
     """
     logging.info("Status check requested.")
     return {"status": "ok"}
@@ -58,7 +69,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
         with open(file_to_send, "rb") as audio:
             try:
                 response = client.audio.transcriptions.create(
-                    model="gpt-4o-transcribe",
+                    model=model_name,
                     file=audio
                 )
                 transcription_text = response.text
